@@ -7,88 +7,64 @@
 % Note: this output has been filtered.
 %       To receive output for a database update, use the "-B" flag.
 
-% Information related to '31.0.0.0 - 31.0.7.255'
+% Information related to '91.123.176.0 - 91.123.191.255'
 
-% Abuse contact for '31.0.0.0 - 31.0.7.255' is 'abuse@plus.pl'
+% Abuse contact for '91.123.176.0 - 91.123.191.255' is 'admin@gigainternet.pl'
 
-inetnum:        31.0.0.0 - 31.0.7.255
-netname:        PLUSNET
-descr:          Polkomtel sp. z o.o.
-descr:          Warszawa
+inetnum:        91.123.176.0 - 91.123.191.255
+netname:        GIGA-NET
 country:        PL
-org:            ORG-PN5-RIPE
-admin-c:        PKL1-RIPE
-tech-c:         PKL1-RIPE
-status:         ASSIGNED PA
-mnt-by:         POLKOMTEL-MNT
-mnt-lower:      POLKOMTEL-MNT
-mnt-domains:    POLKOMTEL-MNT
-mnt-routes:     POLKOMTEL-MNT
-created:        2014-11-19T12:32:28Z
-last-modified:  2014-11-19T12:32:28Z
-source:         RIPE # Filtered
+org:            ORG-FHGA1-RIPE
+admin-c:        PS7777
+tech-c:         PS7777
+status:         ASSIGNED PI
+mnt-by:         RIPE-NCC-END-MNT
+mnt-by:         LEON-MNT
+mnt-routes:     LEON-MNT
+mnt-domains:    LEON-MNT
+mnt-by:         GIGA-MNT
+mnt-routes:     GIGA-MNT
+mnt-domains:    GIGA-MNT
+created:        2010-11-01T15:31:05Z
+last-modified:  2016-04-14T09:01:28Z
+source:         RIPE
+sponsoring-org: ORG-LSzo6-RIPE
 
-organisation:   ORG-PN5-RIPE
-org-name:       Polkomtel Sp. z o.o.
-org-type:       LIR
-address:        ul. Pulawska 466
-address:        02-884
-address:        Warszawa
-address:        POLAND
-phone:          +48 224 261 000
-fax-no:         +48224260088
-abuse-mailbox:  abuse@plus.pl
-admin-c:        IN3-RIPE
-admin-c:        SO1236-RIPE
-mnt-ref:        POLKOMTEL-MNT
-mnt-ref:        RIPE-NCC-HM-MNT
-mnt-by:         RIPE-NCC-HM-MNT
-mnt-by:         POLKOMTEL-MNT
-abuse-c:        PKL1-RIPE
-tech-c:         SO1236-RIPE
-tech-c:         MB29626-RIPE
-tech-c:         KK1860-RIPE
-tech-c:         KS4307-RIPE
-tech-c:         DCH3-RIPE
-created:        2004-04-17T11:47:51Z
-last-modified:  2016-11-14T08:44:40Z
-source:         RIPE # Filtered
-
-role:           PlusGSM IP Team
-address:        Polkomtel sp. z o.o.
-address:        ul. Postepu 3
-address:        02-676 Warszawa
+organisation:   ORG-FHGA1-RIPE
+org-name:       FIRMA HANDLOWA GIGA ARKADIUSZ KOCMA
+org-type:       OTHER
+address:        Pl. Konstytucji 3 Maja 6
+address:        32-043 Skala
 address:        Poland
-phone:          +48 22 4261599
-fax-no:         +48 22 4260099
-remarks:        Plus (pl.plusgsm) registry administration
-remarks:        ---
-remarks:        Registry contact: registry@plus.pl
-remarks:        Spam and abuse reports: abuse@plus.pl
-remarks:        ---
-abuse-mailbox:  abuse@plus.pl
-admin-c:        IN3-RIPE
-tech-c:         KK1860-RIPE
-tech-c:         SO1236-RIPE
-tech-c:         DCH3-RIPE
-tech-c:         MB29626-RIPE
-tech-c:         KS4307-RIPE
-nic-hdl:        PKL1-RIPE
-mnt-by:         POLKOMTEL-MNT
-created:        2003-10-07T14:54:25Z
-last-modified:  2012-06-08T13:16:45Z
+abuse-c:        AR24498-RIPE
+mnt-ref:        LEON-MNT
+mnt-by:         LEON-MNT
+mnt-ref:        GIGA-MNT
+mnt-by:         GIGA-MNT
+created:        2010-07-28T14:03:16Z
+last-modified:  2015-10-09T07:41:17Z
 source:         RIPE # Filtered
 
-% Information related to '31.0.0.0/15AS8374'
-
-route:          31.0.0.0/15
-descr:          Polkomtel S.A.
-descr:          Warsaw, Poland
-origin:         AS8374
-mnt-by:         POLKOMTEL-MNT
-created:        2011-04-05T07:18:40Z
-last-modified:  2011-04-05T07:18:40Z
+person:         Pawel Sosulski
+address:        Firma Handlowa GIGA
+address:        Plac Konstytucji 3 Maja 6
+address:        32-043 SKALA
+phone:          +48517755532
+nic-hdl:        PS7777
+mnt-by:         GIGA-MNT
+created:        2014-02-17T15:03:40Z
+last-modified:  2014-06-24T17:22:41Z
 source:         RIPE # Filtered
+
+% Information related to '91.123.176.0/20AS51792'
+
+route:          91.123.176.0/20
+descr:          GIGA Route #1
+origin:         AS51792
+mnt-by:         GIGA-MNT
+created:        2011-11-07T15:09:56Z
+last-modified:  2011-11-07T15:09:56Z
+source:         RIPE
 
 % This query was served by the RIPE Database Query Service version 1.88 (WAGYU)
 

@@ -1,0 +1,33 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{graphicx}
+\newgeometry{tmargin=2cm, bmargin=2cm, lmargin=2cm, rmargin=2cm}
+\author{Rafał Byczek}
+\title{Mini Projekt - Mapa}
+\begin{document}
+\maketitle
+Przesyłam Panu rozwiązanie zadania Mapa. Uwaga numer 1 - proszę używać pythona2, bo do tej wersji dostosowałem moje rozwiązanie. Na początek mały opis co się tutaj wogóle znajduje:
+
+\begin{itemize}
+\item \textbf{./data/data01.txt} - to jest plik udostępniony przez Pana pod nazwą \textit{data-used-autnums} zawierający informacje o numerach AS.
+\item \textbf{./data/data02.txt} - to jest plik udostępniony przez Pana pod nazwą \textit{data-raw-table}, w którym są podane powiązania numerów IP z numerami AS.
+\item \textbf{./data/data03.txt} - to jest plik mapujący pełne nazwy krajów na skróty dwuznakowe.
+\item \textbf{./databse.py} - to jest plik, który należy uruchomić na początku. zadaniem tego programu jest odpowiednie przetworzenie plików z folderu \textit{data}, do formatu, który mi potem jest pomocny. I tak plik \textit{./data/data01.txt} ewoluuje do pliku \textbf{./data02.in}, plik \textit{./data/data02/txt} do \textbf{./data03.in} oraz plik \textit{./data/data03.txt} do \textbf{./data01.in}.
+\item \textbf{./data01.in} trzyma wiersze postaci \textit{skrot\_kraju\%pelna\_nazwa\_kraju}
+\item \textbf{./data02.in} trzyma wiersze postaci 
+\textit{numer\_as\%skrot\_kraju\%dodatkowe\_informacje\_o\_numerze\_as}
+\item \textbf{./data03.in} korzystając z informacji z pliku wiążącego ip z as trzyma wiersze następującej postaci
+\textit{numer\_ip\_normalnie\%maska\_normalnie\%numer\_ip\_binarnie\%maska\_binarnie}
+\end{itemize}
+
+No i teraz mamy doczynienia z głównym plikiem \textbf{./main.py}. W nim się dzieje cała reszta.
+Najpierw w liniach od 7-29 następuje załadowanie informacji z plików \textit{./data01.in, ./data02.in, ./data03.in} do odpowiednich słowników. Funkcja \textbf{def check(ip)} znajdująca się w liniach od 31 do 44 ma za zadanie sprawdzać czy w wczytanych danych istnieje nasz numer IP, bo te pliki nie zawierają wszystkiego. W głównej pętli programy prosimy użytkownika o podanie numeru IP. Gdy dostajemy numer IP w liniach od 63 do 91 próbujemy wycisnąć z naszych plików wszystko co można i stosowne informacje są wyświetlane na ekranie użytkownikowi. 
+
+Druga część rozwiązania korzysta z linuxowego polecenia \textbf{whois}. W liniach od 49 do 57 jest ono używane, a za pomocą grepa do katalogu temp są wyodrębniane do plików interesujące nas informacje na temat danego numeru IP, jego numeru AS i organizacji, która zarządza tym numerem AS. Potem te dane są przetwarzane w liniach od 99 do 160 i wypisywane na ekran użytkownikowi.
+
+\end{document}

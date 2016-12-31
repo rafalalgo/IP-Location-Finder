@@ -2,6 +2,15 @@
 import subprocess
 import os
 
+vpn = []
+vpn.append("bombay")
+vpn.append("california")
+vpn.append("frankfurt")
+vpn.append("saopaulo")
+vpn.append("sydney")
+vpn.append("tokyo")
+vpn.append("virginia")
+
 get_bin = lambda x, n: format(x, 'b').zfill(n)
 
 data01 = open("data01.in", "r")
@@ -85,8 +94,11 @@ while 1:
     print("     AS: " + " " * (len(shift) - len("     AS: ")) + AS)
     print("     Maska: " + " " * (len(shift) - len("     Maska: ")) + MASKA)
     print("     Kraj: " + " " * (len(shift) - len("     Kraj: ")) + KRAJ)
-    print("     Dodatkowe informacje:" + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL)
-
+    if ADDITIONAL[0] != " ":
+        print("     Dodatkowe informacje: " + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL)
+    else:
+        print("     Dodatkowe informacje: " + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL[1:])
+    
     print("\nNa podstawie wynikow otrzymanych z whois: \n")
     AS = ""
     MASKA = ""
@@ -119,7 +131,7 @@ while 1:
 
     print("     AS: " + " " * (len(shift) - len("     AS: ")) + AS)
     print("     Kraj: " + " " * (len(shift) - len("     Kraj: ")) + KRAJ)
-    print("     Dodatkowe informacje:" + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL)
+    print("     Dodatkowe informacje: " + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL)
     
     if os.stat("./temp/org.out").st_size != 0:
         print("         Organizacja: ")
@@ -163,7 +175,27 @@ while 1:
     KRAJ = ""
     ADDITIONAL = ""
 
-    print("     AS: " + AS)
-    print("     Maska: " + MASKA)
-    print("     Kraj: " + KRAJ)
-    print("     Dodatkowe informacje: " + ADDITIONAL)
+    for item in vpn:
+        print("Trwa nawiazywanie polaczenia vpn poprzez: " + item)
+        test = subprocess.call(["./getPingTime.sh", item, in_ip, "./vpn/"+item])
+        connnect = open("./vpn/" + item)
+        counter = 0
+        suma = 0
+        ile = 0
+        for line in connnect:
+            counter += 1
+            if 3 >= counter >= 2:
+                temp = line[:-1]
+                pos = len(temp) - 4;
+                while pos >= 0 and temp[pos] != ' ': 
+                    pos -= 1
+                temp = temp[(pos + 6):-3]
+                try:
+                    suma += float(temp)
+                    ile += 1
+                except ValueError:
+                    pass
+        if ile != 0:
+            print("Sredni czas pingu wynosi: " + str(suma / ile) + "ms.")
+        else:
+            print("Cos poszlo nie tak.")
