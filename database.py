@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 get_bin = lambda x, n: format(x, 'b').zfill(n)
 
 as_and_kraj = open("./data/data01.txt", "r")
@@ -65,14 +66,15 @@ for line in ip_and_as:
     nr_ip = pack[0]
     num = int(pack[1])
     mask = int(pack[1])
+    count = 32 - mask
     part = mask / 8
     res = mask - 8 * part;
     mask = ("1" * 8 + ".") * part + "1" * res + "0" * (8 - res) + "." + ("0" * 8 + ".") * (3 - part)
-    mask_bin = mask
+    mask_bin = mask[0:-1]
     nr_ip_bin  = nr_ip.split('.')
-    ip_bin = str(get_bin(int(nr_ip_bin[0]), 8)) + '.'
-    ip_bin += str(get_bin(int(nr_ip_bin[1]), 8)) + '.'
-    ip_bin += str(get_bin(int(nr_ip_bin[2]), 8)) + '.'
+    ip_bin = str(get_bin(int(nr_ip_bin[0]), 8))
+    ip_bin += str(get_bin(int(nr_ip_bin[1]), 8))
+    ip_bin += str(get_bin(int(nr_ip_bin[2]), 8))
     ip_bin += str(get_bin(int(nr_ip_bin[3]), 8))
     mask = mask.split('.')
     asn = []
@@ -83,7 +85,7 @@ for line in ip_and_as:
             else:
                 asn.append("0")
     asn = '.'.join(asn)
-    ip_as[nr_ip] = (asn, nr_as, ip_bin, mask_bin)
+    ip_as[nr_ip] = (asn, nr_as, ip_bin, mask_bin, str(32 - count))
 
 KRAJ_KOD = open("data01.in", 'w')
 for key, value in kraj_kod.iteritems():
@@ -97,7 +99,7 @@ AS_KRAJ.close()
 
 IP_AS = open("data03.in", "w")
 for key, value in ip_as.iteritems():
-    IP_AS.write(key + "%" + value[0] + "%" + value[1] + "%" + value[2] + "%" + value[3] + "\n")
+    IP_AS.write(key + "%" + value[0] + "%" + value[1] + "%" + value[2] + "%" + value[3] + "%" + value[4] + "\n")
 IP_AS.close()
 
 as_and_kraj.close()
