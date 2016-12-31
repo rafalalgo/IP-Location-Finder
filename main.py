@@ -37,6 +37,7 @@ data01.close()
 data02.close()
 data03.close()
 
+
 def check(ip):
     val = ip
     ip = ip.split('.')
@@ -52,18 +53,21 @@ def check(ip):
             return key
     return val
 
+
 while 1:
     print("\n********************************************************\n")
     ip_test = raw_input("Podaj IP: ")
-    test = subprocess.call(["whois", ip_test], stdout=open('whois.out','w'))
-    filter_country = subprocess.call(["grep", "country", "whois.out"],stdout=open('./temp/country.out', 'w'))
-    filter_country = subprocess.call(["grep", "Country", "whois.out"],stdout=open('./temp/Country.out', 'w'))
+    test = subprocess.call(["whois", ip_test], stdout=open('whois.out', 'w'))
+    filter_country = subprocess.call(["grep", "country", "whois.out"], stdout=open('./temp/country.out', 'w'))
+    filter_country = subprocess.call(["grep", "Country", "whois.out"], stdout=open('./temp/Country.out', 'w'))
     filter_adres = subprocess.call(["grep", "address", "whois.out"], stdout=open('./temp/address.out', 'w'))
     filter_adres = subprocess.call(["grep", "Address", "whois.out"], stdout=open('./temp/Address.out', 'w'))
     filter_as = subprocess.call(["grep", "origin", "whois.out"], stdout=open('./temp/as.out', 'w'))
     filter_as = subprocess.call(["grep", "Origin", "whois.out"], stdout=open('./temp/AS.out', 'w'))
     filter_organization = subprocess.call(["grep", "org-name", "whois.out"], stdout=open('./temp/org.out', 'w'))
     filter_organization = subprocess.call(["grep", "Org-name", "whois.out"], stdout=open('./temp/Org.out', 'w'))
+    filter_organization = subprocess.call(["grep", "orgname", "whois.out"], stdout=open('./temp/orgn.out', 'w'))
+    filter_organization = subprocess.call(["grep", "OrgName", "whois.out"], stdout=open('./temp/OrgN.out', 'w'))
     in_ip = ip_test
     ip_test = check(ip_test)
 
@@ -76,17 +80,17 @@ while 1:
     else:
         AS = "nieustalono"
         MASKA = "nieustalono"
-    
+
     if ip_test in IP_AS and IP_AS[ip_test][1] in AS_COUNTRY and AS_COUNTRY[IP_AS[ip_test][1]][0] in COUNTRY_CODE:
         KRAJ = COUNTRY_CODE[AS_COUNTRY[IP_AS[ip_test][1]][0]]
     else:
         KRAJ = "nieustalono"
 
-    if ip_test in IP_AS and IP_AS[ip_test][1] in AS_COUNTRY and AS_COUNTRY[IP_AS[ip_test][1]][1] != None and AS_COUNTRY[IP_AS[ip_test][1]][2] != None:
+    if ip_test in IP_AS and IP_AS[ip_test][1] in AS_COUNTRY and AS_COUNTRY[IP_AS[ip_test][1]][1] is not None and AS_COUNTRY[IP_AS[ip_test][1]][2] is not None:
         ADDITIONAL = AS_COUNTRY[IP_AS[ip_test][1]][1] + " " + AS_COUNTRY[IP_AS[ip_test][1]][2]
-    elif ip_test in IP_AS and IP_AS[ip_test][1] in AS_COUNTRY and AS_COUNTRY[IP_AS[ip_test][1]][1] != None:
+    elif ip_test in IP_AS and IP_AS[ip_test][1] in AS_COUNTRY and AS_COUNTRY[IP_AS[ip_test][1]][1] is not None:
         ADDITIONAL = AS_COUNTRY[IP_AS[ip_test][1]][1]
-    elif ip_test in IP_AS and IP_AS[ip_test][1] in AS_COUNTRY and AS_COUNTRY[IP_AS[ip_test][1]][2] != None:
+    elif ip_test in IP_AS and IP_AS[ip_test][1] in AS_COUNTRY and AS_COUNTRY[IP_AS[ip_test][1]][2] is not None:
         ADDITIONAL = AS_COUNTRY[IP_AS[ip_test][1]][2]
     else:
         ADDITIONAL = "brak"
@@ -98,11 +102,11 @@ while 1:
         print("     Dodatkowe informacje: " + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL)
     else:
         print("     Dodatkowe informacje: " + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL[1:])
-    
+
     print("\nNa podstawie wynikow otrzymanych z whois: \n")
     AS = ""
-    MASKA = ""
-    KRAJ = ""
+    MASKA = "niesustalono"
+    KRAJ = "nieustalono"
     ADDITIONAL = ""
 
     if os.stat("./temp/country.out").st_size != 0:
@@ -129,10 +133,13 @@ while 1:
             AS += " "
         open_plik.close()
 
+    if AS == "":
+        AS = "nieustalono"
+
     print("     AS: " + " " * (len(shift) - len("     AS: ")) + AS)
     print("     Kraj: " + " " * (len(shift) - len("     Kraj: ")) + KRAJ)
     print("     Dodatkowe informacje: " + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL)
-    
+
     if os.stat("./temp/org.out").st_size != 0:
         print("         Organizacja: ")
         open_plik = open("./temp/org.out", "r")
@@ -147,6 +154,19 @@ while 1:
             print(shift + line[(len("country:        ")):-1])
         open_plik.close()
 
+    if os.stat("./temp/orgn.out").st_size != 0:
+        print("     Organizacja: ")
+        open_plik = open("./temp/orgn.out", "r")
+        for line in open_plik:
+            print(shift + line[(len("country:        ")):-1])
+        open_plik.close()
+
+    if os.stat("./temp/OrgN.out").st_size != 0:
+        print("     Organizacja: ")
+        open_plik = open("./temp/OrgN.out", "r")
+        for line in open_plik:
+            print(shift + line[(len("country:        ")):-1])
+        open_plik.close()
 
     if os.stat("./temp/address.out").st_size != 0:
         print("         Adres organizacji: ")
@@ -168,16 +188,17 @@ while 1:
             k += 1
         open_plik.close()
 
-
     print("\nNa podstawie wynikow otrzymanych z pingow i pomiarow na mapie swiata: \n")
     AS = ""
     MASKA = ""
     KRAJ = ""
     ADDITIONAL = ""
 
+    pary = {}
+
     for item in vpn:
         print("Trwa nawiazywanie polaczenia vpn poprzez: " + item)
-        test = subprocess.call(["./getPingTime.sh", item, in_ip, "./vpn/"+item])
+        test = subprocess.call(["./getPingTime.sh", item, in_ip, "./vpn/" + item])
         connnect = open("./vpn/" + item)
         counter = 0
         suma = 0
@@ -187,7 +208,7 @@ while 1:
             if 3 >= counter >= 2:
                 temp = line[:-1]
                 pos = len(temp) - 4;
-                while pos >= 0 and temp[pos] != ' ': 
+                while pos >= 0 and temp[pos] != ' ':
                     pos -= 1
                 temp = temp[(pos + 6):-3]
                 try:
@@ -197,5 +218,6 @@ while 1:
                     pass
         if ile != 0:
             print("Sredni czas pingu wynosi: " + str(suma / ile) + "ms.")
+            pary[item] = str(suma / ile)
         else:
             print("Cos poszlo nie tak.")

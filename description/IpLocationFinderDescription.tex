@@ -25,9 +25,11 @@ Przesyłam Panu rozwiązanie zadania Mapa. Uwaga numer 1 - proszę używać pyth
 \textit{numer\_ip\_normalnie\%maska\_normalnie\%numer\_ip\_binarnie\%maska\_binarnie}
 \end{itemize}
 
-No i teraz mamy doczynienia z głównym plikiem \textbf{./main.py}. W nim się dzieje cała reszta.
+No i teraz mamy doczynieniaa z głównym plikiem \textbf{./main.py}. W nim się dzieje cała reszta.
 Najpierw w liniach od 7-29 następuje załadowanie informacji z plików \textit{./data01.in, ./data02.in, ./data03.in} do odpowiednich słowników. Funkcja \textbf{def check(ip)} znajdująca się w liniach od 31 do 44 ma za zadanie sprawdzać czy w wczytanych danych istnieje nasz numer IP, bo te pliki nie zawierają wszystkiego. W głównej pętli programy prosimy użytkownika o podanie numeru IP. Gdy dostajemy numer IP w liniach od 63 do 91 próbujemy wycisnąć z naszych plików wszystko co można i stosowne informacje są wyświetlane na ekranie użytkownikowi. 
 
 Druga część rozwiązania korzysta z linuxowego polecenia \textbf{whois}. W liniach od 49 do 57 jest ono używane, a za pomocą grepa do katalogu temp są wyodrębniane do plików interesujące nas informacje na temat danego numeru IP, jego numeru AS i organizacji, która zarządza tym numerem AS. Potem te dane są przetwarzane w liniach od 99 do 160 i wypisywane na ekran użytkownikowi.
+
+Trzecia część zaś zawiera rozwiązanie korzystające z vpn i pingowania. Mamy tutaj program \textbf{./getPingTime.sh}, który uruchamiamy w postaci \textit{./getPingTime.sh miasto numer\_ip}. Za pomocą programu \textbf{./getPingTime.sh} najpierw tworzę vpn za pomocą pliku dostarczonego przez Pana nam zawierającego miasta \textit{bombay, california, frankfurt, saopaulo, sydney, tokyo, virginia}. I tak dla każdego miasta robię w tablicy routingu małe przekierowania przez podane miasto, i potem pingujemy i dla każdego miasta mierzymy średni czas przesłania pakietów. Potem każde połączenie czyści za sobą i przywraca tablice routingu do pierwotnej postaci. Zaś w pliku \textbf{./main.py} w liniach od 197 do 220 następuje przeparsowanie tego co wypisał program ping i policzenie średniego czasu na przesłanie pakietu i wypisanie użytkownikowi stosownej informacji dla każdego miasta.
 
 \end{document}
