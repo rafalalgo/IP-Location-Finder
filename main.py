@@ -1,15 +1,34 @@
 #!/usr/bin/python
 import subprocess
 import os
+from geopy.geocoders import Nominatim
+from geopy.distance import great_circle
 
 vpn = []
 vpn.append("bombay")
 vpn.append("california")
 vpn.append("frankfurt")
-vpn.append("saopaulo")
+vpn.append("sao-paulo")
 vpn.append("sydney")
 vpn.append("tokyo")
 vpn.append("virginia")
+
+map_cordinate = {}
+
+# try:
+#    geolocator = Nominatim()
+#    location = geolocator.geocode("ul. Olkuska 43, Suloszowa")
+#    HOME = (location.latitude, location.longitude)
+# except Exception:
+#    print("Nie udalo sie pobrac lokalizacji.")
+
+for item in vpn:
+    try:
+        geolocator = Nominatim()
+        location = geolocator.geocode(item)
+        map_cordinate[item] = (location.latitude, location.longitude)
+    except Exception:
+        print("Nie udalo sie pobrac lokalizacji dla: " + item)
 
 get_bin = lambda x, n: format(x, 'b').zfill(n)
 
@@ -71,7 +90,7 @@ while 1:
     in_ip = ip_test
     ip_test = check(ip_test)
 
-    shift = " " * len("         Adres organizacji: ")
+    shift = " " * len("         Szerokosc geograficzna: ")
 
     print("\nNa podstawie plikow data-raw-table i data-used-autnums:\n")
     if ip_test in IP_AS:
@@ -102,6 +121,16 @@ while 1:
         print("     Dodatkowe informacje: " + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL)
     else:
         print("     Dodatkowe informacje: " + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL[1:])
+
+    try:
+        geolocator = Nominatim()
+        location = geolocator.geocode(KRAJ)
+
+        if location is not None:
+            print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(location.latitude,4)))
+            print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(location.longitude,4)))
+    except Exception:
+        print("Nie udalo sie pobrac lokalizacji dla: " + KRAJ)
 
     print("\nNa podstawie wynikow otrzymanych z whois: \n")
     AS = ""
@@ -140,6 +169,8 @@ while 1:
     print("     Kraj: " + " " * (len(shift) - len("     Kraj: ")) + KRAJ)
     print("     Dodatkowe informacje: " + " " * (len(shift) - len("     Dodatkowe informacje: ")) + ADDITIONAL)
 
+    tekst = KRAJ
+
     if os.stat("./temp/org.out").st_size != 0:
         print("         Organizacja: ")
         open_plik = open("./temp/org.out", "r")
@@ -175,6 +206,8 @@ while 1:
         for line in open_plik:
             if k < 4:
                 print(shift + line[(len("country:        ")):-1])
+                if tekst == KRAJ:
+                    tekst = line[(len("country:        ")):-1]
             k += 1
         open_plik.close()
 
@@ -185,8 +218,24 @@ while 1:
         for line in open_plik:
             if k < 4:
                 print(shift + line[(len("country:        ")):-1])
+                if tekst == KRAJ:
+                    tekst = line[(len("country:        ")):-1]
             k += 1
         open_plik.close()
+
+    try:
+        geolocator = Nominatim()
+        location = geolocator.geocode(tekst)
+        if location is not None:
+            print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(location.latitude,4)))
+            print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(location.longitude,4)))
+        else:
+            location = geolocator.geocode(KRAJ)
+            if location is not None:
+                print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(location.latitude,4)))
+                print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(location.longitude,4)))
+    except Exception:
+        print("Nie udalo sie pobrac lokalizacji dla: " + tekst)
 
     print("\nNa podstawie wynikow otrzymanych z pingow i pomiarow na mapie swiata: \n")
     AS = ""
@@ -195,29 +244,46 @@ while 1:
     ADDITIONAL = ""
 
     pary = {}
+    odleglosc = {}
 
+    # SUMA = 0
+    # C = 0
+
+    SREDNIA_PREDKOSC = float(20000000.0)
+    
     for item in vpn:
-        print("Trwa nawiazywanie polaczenia vpn poprzez: " + item)
-        test = subprocess.call(["./getPingTime.sh", item, in_ip, "./vpn/" + item])
-        connnect = open("./vpn/" + item)
-        counter = 0
-        suma = 0
-        ile = 0
-        for line in connnect:
-            counter += 1
-            if 3 >= counter >= 2:
-                temp = line[:-1]
-                pos = len(temp) - 4;
-                while pos >= 0 and temp[pos] != ' ':
-                    pos -= 1
-                temp = temp[(pos + 6):-3]
-                try:
-                    suma += float(temp)
-                    ile += 1
-                except ValueError:
-                    pass
-        if ile != 0:
-            print("Sredni czas pingu wynosi: " + str(suma / ile) + "ms.")
-            pary[item] = str(suma / ile)
-        else:
-            print("Cos poszlo nie tak.")
+        if item in map_cordinate:
+            print("Trwa nawiazywanie polaczenia vpn poprzez: " + item)
+            # test = subprocess.call(["./getPingTime.sh", item, in_ip, "./vpn/" + item])
+            # print(item + " " + str(round(map_cordinate[item][0], 4)) + " " + str(round(map_cordinate[item][1], 4)))
+            # print(str(HOME[0]) + " " + str(HOME[1]))
+            # print("ODLEGLOSC: " + str(great_circle(HOME, map_cordinate[item]).m))
+            connnect = open("./vpn/" + item)
+            counter = 0
+            suma = 0
+            ile = 0
+            for line in connnect:
+                counter += 1
+                if 3 >= counter >= 2:
+                    temp = line[:-1]
+                    pos = len(temp) - 4;
+                    while pos >= 0 and temp[pos] != ' ':
+                        pos -= 1
+                    temp = temp[(pos + 6):-3]
+                    try:
+                        suma += float(temp)
+                        ile += 1
+                    except ValueError:
+                        pass
+            if ile != 0:
+                print("Sredni czas pingu wynosi: " + str(suma / ile) + "ms.")
+                pary[item] = str(suma / ile)
+                # SUMA +=  great_circle(HOME, map_cordinate[item]).m / (suma / (ile * 1000))
+                # C += 1
+                DROGA = SREDNIA_PREDKOSC * (suma / (ile * 1000))
+                odleglosc[item] = DROGA
+            else:
+                print("Cos poszlo nie tak.")
+    # print(str(SUMA / C))
+    for key in sorted(odleglosc, key=odleglosc.get):
+        print(key + " " * (20 - len(key)) + str(odleglosc[key]))
