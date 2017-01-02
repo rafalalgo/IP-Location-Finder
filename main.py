@@ -1,27 +1,23 @@
 #!/usr/bin/python
 import subprocess
 import os
+import sys
 from geopy.geocoders import Nominatim
 from geopy.distance import great_circle
 from math import *
 
-vpn = []
-vpn.append("bombay")
-vpn.append("california")
-vpn.append("frankfurt")
-vpn.append("sao-paulo")
-vpn.append("sydney")
-vpn.append("tokyo")
-vpn.append("virginia")
+vpn = ["bombay", "california", "frankfurt", "sao-paulo", "sydney", "tokyo", "virginia"]
 
 map_cordinate = {}
 
+"""
 try:
     geolocator = Nominatim()
     location = geolocator.geocode("ul. Olkuska 43, Suloszowa")
     HOME = (location.latitude, location.longitude)
 except Exception:
     print("Nie udalo sie pobrac lokalizacji.")
+"""
 
 for item in vpn:
     try:
@@ -77,6 +73,7 @@ def check(ip):
 while 1:
     print("\n********************************************************\n")
     ip_test = raw_input("Podaj IP: ")
+
     test = subprocess.call(["whois", ip_test], stdout=open('whois.out', 'w'))
     filter_country = subprocess.call(["grep", "country", "whois.out"], stdout=open('./temp/country.out', 'w'))
     filter_country = subprocess.call(["grep", "Country", "whois.out"], stdout=open('./temp/Country.out', 'w'))
@@ -128,8 +125,8 @@ while 1:
         location = geolocator.geocode(KRAJ)
 
         if location is not None:
-            print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(location.latitude,4)))
-            print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(location.longitude,4)))
+            print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(location.latitude, 4)))
+            print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(location.longitude, 4)))
     except Exception:
         print("Nie udalo sie pobrac lokalizacji dla: " + KRAJ)
 
@@ -228,13 +225,13 @@ while 1:
         geolocator = Nominatim()
         location = geolocator.geocode(tekst)
         if location is not None:
-            print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(location.latitude,4)))
-            print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(location.longitude,4)))
+            print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(location.latitude, 4)))
+            print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(location.longitude, 4)))
         else:
             location = geolocator.geocode(KRAJ)
             if location is not None:
-                print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(location.latitude,4)))
-                print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(location.longitude,4)))
+                print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(location.latitude, 4)))
+                print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(location.longitude, 4)))
     except Exception:
         print("Nie udalo sie pobrac lokalizacji dla: " + tekst)
 
@@ -247,14 +244,14 @@ while 1:
     pary = {}
     odleglosc = {}
     waga = {}
-    
+
     """
     SUMA = 0
     C = 0
     """
 
-    SREDNIA_PREDKOSC = float(20165.1292815)
-    
+    SREDNIA_PREDKOSC = float(20165129.2815)
+
     for item in vpn:
         if item in map_cordinate:
             print("Trwa nawiazywanie polaczenia vpn poprzez: " + item)
@@ -262,17 +259,17 @@ while 1:
             """
             print(item + " " + str(round(map_cordinate[item][0], 4)) + " " + str(round(map_cordinate[item][1], 4)))
             print(str(HOME[0]) + " " + str(HOME[1]))
+            print("ODLEGLOSC: " + str(round(great_circle(HOME, map_cordinate[item]).m, 3)))
             """
-            print("ODLEGLOSC: " + str(round(great_circle(HOME, map_cordinate[item]).km, 3)))
             connnect = open("./vpn/" + item)
             counter = 0
             suma = 0
             ile = 0
             for line in connnect:
                 counter += 1
-                if 11 >= counter >= 2:
+                if 5 >= counter >= 2:
                     temp = line[:-1]
-                    pos = len(temp) - 4;
+                    pos = len(temp) - 4
                     while pos >= 0 and temp[pos] != ' ':
                         pos -= 1
                     temp = temp[(pos + 6):-3]
@@ -282,7 +279,7 @@ while 1:
                     except ValueError:
                         pass
             if ile != 0:
-                print("Sredni czas pingu wynosi: " + str(suma / ile) + "ms.")
+                print("Sredni czas pingu wynosi: " + str(round(suma / ile, 3)) + " ms.")
                 pary[item] = str(suma / ile)
                 """
                 SUMA +=  great_circle(HOME, map_cordinate[item]).m / (suma / (ile * 1000))
@@ -292,31 +289,35 @@ while 1:
                 odleglosc[item] = DROGA_W_LINI_PROSTEJ
             else:
                 print("Cos poszlo nie tak.")
-    #print(str(SUMA / C))
+    # print(str(SUMA / C))
+
+    print("\nPrzypuszczalne odleglosci szukanego punktu od podanych miast w metrach: \n")
+
     for key in sorted(odleglosc, key=odleglosc.get):
-        print(key + " " * (20 - len(key)) + str(round(odleglosc[key], 3)))
-        waga[key] = round(odleglosc[key], 3)
+        print("         " + key + " " * (20 - len(key)) + str(round(odleglosc[key], 3)))
+        waga[key] = odleglosc[key]
+    print("\n")
 
     for key, value in waga.iteritems():
         waga[key] = float(1 / value)
 
     suma = sum(waga.values())
-    print(suma)
+    # print(suma)
 
     for key, value in map_cordinate.iteritems():
-        print(key)
-        print(str(value[0]) + " " + str(value[0] * pi / 180))
-        print(str(value[1]) + " " + str(value[1] * pi / 180))
+        # print(key)
+        # print(str(value[0]) + " " + str(value[0] * pi / 180))
+        # print(str(value[1]) + " " + str(value[1] * pi / 180))
         map_cordinate[key] = (value[0] * pi / 180, value[1] * pi / 180)
-    
+
     zmienne = {}
 
     for key, value in map_cordinate.iteritems():
-        print(key)
-        x = cos(map_cordinate[key][0]) * cos(map_cordinate[key][1]) 
+        # print(key)
+        x = cos(map_cordinate[key][0]) * cos(map_cordinate[key][1])
         y = cos(map_cordinate[key][0]) * sin(map_cordinate[key][1])
         z = sin(map_cordinate[key][0])
-        print(x, y, z)
+        # print(x, y, z)
         zmienne[key] = (x, y, z)
 
     X = 0
@@ -332,7 +333,7 @@ while 1:
     Y = Y / suma
     Z = Z / suma
 
-    print(X, Y, Z)
+    # print(X, Y, Z)
 
     Lon = atan2(Y, X)
     Hyp = sqrt(X * X + Y * Y)
@@ -341,11 +342,14 @@ while 1:
     lat = Lat * 180 / pi
     lon = Lon * 180 / pi
 
-    print(lat, lon)
+    print("Najprawdopodobniej szukany punkt to: ")
+    print("         Szerokosc geograficzna: " + " " * (len(shift) - len("         Szerokosc geograficzna: ")) + "\n" + shift + str(round(lat, 4)))
+    print("         Dlugosc geograficzna: " + " " * (len(shift) - len("         Dlugosc geograficzna: ")) + "\n" + shift + str(round(lon, 4)))
 
     try:
         geolocator = Nominatim()
         location = geolocator.reverse(str(lat) + ", " + str(lon))
-        print(location.address)
+        print("         Miejsce:\n" + shift + location.address)
     except Exception:
-        print("Nie udalo sie pobrac adresu dla punktu o wspolrzednych: (" + str(round(lat, 3)) + ", " + str(round(lon, 3)) + ")")
+        print("Nie udalo sie pobrac adresu dla punktu o wspolrzednych: (" + str(round(lat, 4)) + ", " + str(
+            round(lon, 4)) + ")")

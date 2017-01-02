@@ -1,15 +1,9 @@
 PING 91.123.176.254 (91.123.176.254) 56(84) bytes of data.
-64 bytes from 91.123.176.254: icmp_seq=1 ttl=48 time=248 ms
-64 bytes from 91.123.176.254: icmp_seq=2 ttl=48 time=242 ms
-64 bytes from 91.123.176.254: icmp_seq=3 ttl=48 time=245 ms
-64 bytes from 91.123.176.254: icmp_seq=4 ttl=48 time=244 ms
-64 bytes from 91.123.176.254: icmp_seq=5 ttl=48 time=263 ms
-64 bytes from 91.123.176.254: icmp_seq=6 ttl=48 time=254 ms
-64 bytes from 91.123.176.254: icmp_seq=7 ttl=48 time=251 ms
-64 bytes from 91.123.176.254: icmp_seq=8 ttl=48 time=265 ms
-64 bytes from 91.123.176.254: icmp_seq=9 ttl=48 time=255 ms
-64 bytes from 91.123.176.254: icmp_seq=10 ttl=48 time=260 ms
+64 bytes from 91.123.176.254: icmp_seq=1 ttl=48 time=243 ms
+64 bytes from 91.123.176.254: icmp_seq=2 ttl=48 time=261 ms
+64 bytes from 91.123.176.254: icmp_seq=3 ttl=48 time=243 ms
+64 bytes from 91.123.176.254: icmp_seq=4 ttl=48 time=246 ms
 
 --- 91.123.176.254 ping statistics ---
-10 packets transmitted, 10 received, 0% packet loss, time 9002ms
-rtt min/avg/max/mdev = 242.345/253.123/265.731/7.696 ms
+4 packets transmitted, 4 received, 0% packet loss, time 3001ms
+rtt min/avg/max/mdev = 243.414/248.889/261.791/7.576 ms
