@@ -3,6 +3,7 @@ import subprocess
 import os
 from geopy.geocoders import Nominatim
 from geopy.distance import great_circle
+from math import *
 
 vpn = []
 vpn.append("bombay")
@@ -15,12 +16,12 @@ vpn.append("virginia")
 
 map_cordinate = {}
 
-# try:
-#    geolocator = Nominatim()
-#    location = geolocator.geocode("ul. Olkuska 43, Suloszowa")
-#    HOME = (location.latitude, location.longitude)
-# except Exception:
-#    print("Nie udalo sie pobrac lokalizacji.")
+try:
+    geolocator = Nominatim()
+    location = geolocator.geocode("ul. Olkuska 43, Suloszowa")
+    HOME = (location.latitude, location.longitude)
+except Exception:
+    print("Nie udalo sie pobrac lokalizacji.")
 
 for item in vpn:
     try:
@@ -245,26 +246,31 @@ while 1:
 
     pary = {}
     odleglosc = {}
+    waga = {}
+    
+    """
+    SUMA = 0
+    C = 0
+    """
 
-    # SUMA = 0
-    # C = 0
-
-    SREDNIA_PREDKOSC = float(20000000.0)
+    SREDNIA_PREDKOSC = float(20165.1292815)
     
     for item in vpn:
         if item in map_cordinate:
             print("Trwa nawiazywanie polaczenia vpn poprzez: " + item)
-            # test = subprocess.call(["./getPingTime.sh", item, in_ip, "./vpn/" + item])
-            # print(item + " " + str(round(map_cordinate[item][0], 4)) + " " + str(round(map_cordinate[item][1], 4)))
-            # print(str(HOME[0]) + " " + str(HOME[1]))
-            # print("ODLEGLOSC: " + str(great_circle(HOME, map_cordinate[item]).m))
+            test = subprocess.call(["./getPingTime.sh", item, in_ip, "./vpn/" + item])
+            """
+            print(item + " " + str(round(map_cordinate[item][0], 4)) + " " + str(round(map_cordinate[item][1], 4)))
+            print(str(HOME[0]) + " " + str(HOME[1]))
+            """
+            print("ODLEGLOSC: " + str(round(great_circle(HOME, map_cordinate[item]).km, 3)))
             connnect = open("./vpn/" + item)
             counter = 0
             suma = 0
             ile = 0
             for line in connnect:
                 counter += 1
-                if 3 >= counter >= 2:
+                if 11 >= counter >= 2:
                     temp = line[:-1]
                     pos = len(temp) - 4;
                     while pos >= 0 and temp[pos] != ' ':
@@ -278,12 +284,68 @@ while 1:
             if ile != 0:
                 print("Sredni czas pingu wynosi: " + str(suma / ile) + "ms.")
                 pary[item] = str(suma / ile)
-                # SUMA +=  great_circle(HOME, map_cordinate[item]).m / (suma / (ile * 1000))
-                # C += 1
-                DROGA = SREDNIA_PREDKOSC * (suma / (ile * 1000))
-                odleglosc[item] = DROGA
+                """
+                SUMA +=  great_circle(HOME, map_cordinate[item]).m / (suma / (ile * 1000))
+                C += 1
+                """
+                DROGA_W_LINI_PROSTEJ = SREDNIA_PREDKOSC * (suma / (ile * 1000))
+                odleglosc[item] = DROGA_W_LINI_PROSTEJ
             else:
                 print("Cos poszlo nie tak.")
-    # print(str(SUMA / C))
+    #print(str(SUMA / C))
     for key in sorted(odleglosc, key=odleglosc.get):
-        print(key + " " * (20 - len(key)) + str(odleglosc[key]))
+        print(key + " " * (20 - len(key)) + str(round(odleglosc[key], 3)))
+        waga[key] = round(odleglosc[key], 3)
+
+    for key, value in waga.iteritems():
+        waga[key] = float(1 / value)
+
+    suma = sum(waga.values())
+    print(suma)
+
+    for key, value in map_cordinate.iteritems():
+        print(key)
+        print(str(value[0]) + " " + str(value[0] * pi / 180))
+        print(str(value[1]) + " " + str(value[1] * pi / 180))
+        map_cordinate[key] = (value[0] * pi / 180, value[1] * pi / 180)
+    
+    zmienne = {}
+
+    for key, value in map_cordinate.iteritems():
+        print(key)
+        x = cos(map_cordinate[key][0]) * cos(map_cordinate[key][1]) 
+        y = cos(map_cordinate[key][0]) * sin(map_cordinate[key][1])
+        z = sin(map_cordinate[key][0])
+        print(x, y, z)
+        zmienne[key] = (x, y, z)
+
+    X = 0
+    Y = 0
+    Z = 0
+
+    for key, value in zmienne.iteritems():
+        X += zmienne[key][0] * waga[key]
+        Y += zmienne[key][1] * waga[key]
+        Z += zmienne[key][2] * waga[key]
+
+    X = X / suma
+    Y = Y / suma
+    Z = Z / suma
+
+    print(X, Y, Z)
+
+    Lon = atan2(Y, X)
+    Hyp = sqrt(X * X + Y * Y)
+    Lat = atan2(Z, Hyp)
+
+    lat = Lat * 180 / pi
+    lon = Lon * 180 / pi
+
+    print(lat, lon)
+
+    try:
+        geolocator = Nominatim()
+        location = geolocator.reverse(str(lat) + ", " + str(lon))
+        print(location.address)
+    except Exception:
+        print("Nie udalo sie pobrac adresu dla punktu o wspolrzednych: (" + str(round(lat, 3)) + ", " + str(round(lon, 3)) + ")")
