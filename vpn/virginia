@@ -1,9 +1,9 @@
 PING 91.123.176.254 (91.123.176.254) 56(84) bytes of data.
-64 bytes from 91.123.176.254: icmp_seq=1 ttl=48 time=243 ms
-64 bytes from 91.123.176.254: icmp_seq=2 ttl=48 time=261 ms
-64 bytes from 91.123.176.254: icmp_seq=3 ttl=48 time=243 ms
-64 bytes from 91.123.176.254: icmp_seq=4 ttl=48 time=246 ms
+64 bytes from 91.123.176.254: icmp_seq=1 ttl=48 time=245 ms
+64 bytes from 91.123.176.254: icmp_seq=2 ttl=48 time=241 ms
+64 bytes from 91.123.176.254: icmp_seq=3 ttl=48 time=246 ms
+64 bytes from 91.123.176.254: icmp_seq=4 ttl=48 time=239 ms
 
 --- 91.123.176.254 ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3001ms
-rtt min/avg/max/mdev = 243.414/248.889/261.791/7.576 ms
+4 packets transmitted, 4 received, 0% packet loss, time 3000ms
+rtt min/avg/max/mdev = 239.415/243.103/246.259/2.743 ms

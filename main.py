@@ -6,6 +6,8 @@ from geopy.geocoders import Nominatim
 from geopy.distance import great_circle
 from math import *
 
+# 91.123.176.254
+
 vpn = ["bombay", "california", "frankfurt", "sao-paulo", "sydney", "tokyo", "virginia"]
 
 map_cordinate = {}
